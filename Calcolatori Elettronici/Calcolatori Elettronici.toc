@@ -1,0 +1,41 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {section}{\numberline {1}Architettura del calcolatore moderno}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Introduzione}{2}{subsection.1.1}%
+\contentsline {paragraph}{Chi comanda?}{2}{section*.2}%
+\contentsline {subsection}{\numberline {1.2}Calcolatori Moderni}{2}{subsection.1.2}%
+\contentsline {paragraph}{Indirizzamento e Strutture Dati}{2}{section*.3}%
+\contentsline {subsection}{\numberline {1.3}Lo Spazio di I/O e l'Interazione con il Sistema}{3}{subsection.1.3}%
+\contentsline {paragraph}{Il processo di Bootstrap}{3}{section*.4}%
+\contentsline {paragraph}{L'Interfaccia di I/O e i Registri}{3}{section*.5}%
+\contentsline {subsection}{\numberline {1.4}Mappatura dello Spazio di Indirizzamento}{4}{subsection.1.4}%
+\contentsline {paragraph}{Unicità dell'indirizzo e Collisioni}{4}{section*.6}%
+\contentsline {paragraph}{Memoria Video}{4}{section*.7}%
+\contentsline {subsection}{\numberline {1.5}CPU - Il Ciclo Fondamentale (Fetch-Execute)}{4}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}L'Evoluzione a 64 bit (AMD64)}{5}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}Organizzazione dei Registri}{5}{subsubsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.7}Indirizzamento Relativo e Limiti Fisici}{5}{subsection.1.7}%
+\contentsline {paragraph}{Indirizzamento RIP-relative}{5}{section*.8}%
+\contentsline {paragraph}{Istruzione MOVABS}{6}{section*.9}%
+\contentsline {subsection}{\numberline {1.8}Spazio di Indirizzamento e Indirizzi Canonici}{6}{subsection.1.8}%
+\contentsline {paragraph}{Normalizzazione: La Forma Canonica}{6}{section*.10}%
+\contentsline {subsection}{\numberline {1.9}Allineamento dei Dati in Memoria}{6}{subsection.1.9}%
+\contentsline {paragraph}{Il costo del disallineamento}{6}{section*.11}%
+\contentsline {subsection}{\numberline {1.10}Rappresentazione dei dati: Endianness}{7}{subsection.1.10}%
+\contentsline {paragraph}{Analisi dello schema di memoria}{8}{section*.12}%
+\contentsline {subsection}{\numberline {1.11}Nomenclatura e Potenze di 2}{8}{subsection.1.11}%
+\contentsline {paragraph}{Esadecimale e Byte}{8}{section*.13}%
+\contentsline {paragraph}{Proprietà delle potenze di 2}{8}{section*.14}%
+\contentsline {subsection}{\numberline {1.12}Offset, Intervalli e Circolarità}{9}{subsection.1.12}%
+\contentsline {paragraph}{Offset e Intervalli}{9}{section*.15}%
+\contentsline {paragraph}{Circolarità dello Spazio}{9}{section*.16}%
+\contentsline {paragraph}{Gestione del Segno negli Offset}{9}{section*.17}%
+\contentsline {subsection}{\numberline {1.13}Confini (Boundaries) e Regioni Naturali}{9}{subsection.1.13}%
+\contentsline {paragraph}{Definizione di Boundary}{10}{section*.18}%
+\contentsline {paragraph}{Regioni Naturali}{10}{section*.19}%
+\contentsline {subsection}{\numberline {1.14}L'Interfaccia Fisica: Bus Dati e Byte Enable}{10}{subsection.1.14}%
+\contentsline {paragraph}{Esempio: Lettura disallineata}{11}{section*.20}%
+\contentsline {subsection}{\numberline {1.15}L'Organizzazione Fisica della Memoria: Righe e Byte Enable}{11}{subsection.1.15}%
+\contentsline {paragraph}{Il Bus Indirizzi e i segnali $/BE$}{11}{section*.21}%
+\contentsline {subsection}{\numberline {1.16}Analisi di una Lettura Disallineata}{12}{subsection.1.16}%
+\contentsline {paragraph}{Conclusione: Shifting e Prestazioni}{12}{section*.22}%

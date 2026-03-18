@@ -1,0 +1,498 @@
+\documentclass[a4paper,12pt]{article}
+
+% Pacchetti utili
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usepackage[table,xcdraw]{xcolor} % Fondamentale per \cellcolor
+\usepackage{array}                % Per gestire meglio le colonne delle tabelle
+\usepackage{booktabs}             % Per \toprule, \midrule, \bottomrule
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\usetikzlibrary{decorations.pathreplacing, positioning} % Librerie TikZ corrette
+\usepackage{calligra} % Se vuoi usare il font, caricalo come pacchetto separato
+\hypersetup{pageanchor=false} % Risolve il warning sui duplicati di pagina
+
+\begin{document}
+	
+	\begin{titlepage}
+		\centering
+		
+		% Intestazione Università
+		{\scshape\LARGE Università di Pisa \par}
+		\vspace{0.5cm}
+		
+		% Titolo corso
+		{\Huge\bfseries Calcolatori Elettronici \par}
+		\vspace{0.5cm}
+		{\Large Anno Accademico 2025--2026 \par}
+		
+		\vfill
+		
+		% Autore
+		{\Large\textbf{Pietro Bacigalupi} \par}
+		\vspace{0.5cm}
+		
+		\vfill
+		
+		% Data
+		{\large \today\par}
+		
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	\section{Architettura del calcolatore moderno}
+	\subsection{Introduzione}
+	
+	\paragraph{Chi comanda?}
+	Il calcolatore è controllato dal \textbf{software}, ovvero da una sequenza di istruzioni memorizzate in memoria.
+	
+	La \textbf{CPU} (Central Processing Unit) preleva le istruzioni dalla memoria centrale (RAM), le decodifica e le esegue. 
+	Essa non possiede memoria delle operazioni precedentemente eseguite, se non attraverso lo stato dei registri interni.
+	
+	La CPU, in ogni istante, può accedere esclusivamente:
+	\begin{itemize}
+		\item ai propri registri interni;
+		\item alla memoria centrale (RAM);
+		\item ai dispositivi collegati tramite il bus.
+	\end{itemize}
+	
+	La \textbf{RAM} funge da contenitore temporaneo del programma in esecuzione e dei dati su cui esso opera.
+	\subsection{Calcolatori Moderni}
+	\begin{center}
+		\begin{tikzpicture}[
+			block/.style={draw, rectangle, minimum width=3cm, minimum height=1.5cm},
+			bus/.style={thick}
+			]
+			
+			% CPU
+			\node[block] (cpu) at (0,2) {CPU};
+			
+			% RAM
+			\node[block] (ram) at (8,2) {RAM};
+			
+			% I/O
+			\node[block] (io) at (2,0) {I/O};
+			
+			% ROM
+			\node[block] (rom) at (6,0) {ROM};
+			
+			% Bus principale
+			\draw[bus] (-1,1) -- (9,1);
+			\node at (9.7,1) {BUS};
+			
+			% Collegamenti verticali
+			\draw (cpu.south) -- (0,1);
+			\draw (ram.south) -- (8,1);
+			\draw (io.north) -- (2,1);
+			\draw (rom.north) -- (6,1);
+			
+		\end{tikzpicture}
+	\end{center}
+	 La RAM, infatti, è una sequenza di celle di memoria, ma non contiene metadati sulla natura del proprio contenuto.
+	
+	\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Nota Bene: Trasparenza della Memoria]
+		All'interno della memoria non è specificata la natura del dato: non c'è distinzione esplicita tra un'istruzione eseguibile, un numero intero o un indirizzo. È compito della \textbf{CPU} interpretare correttamente il dato prelevato in base al contesto (fase di \textit{fetch} dell'istruzione o di \textit{operand fetch}).
+	\end{tcolorbox}
+	
+	\paragraph{Indirizzamento e Strutture Dati}
+	Gli indirizzi non sono fisicamente scritti nelle celle di memoria; essi rappresentano la posizione logica e fisica della cella stessa, accessibile tramite il \textit{Address Bus}. 
+	
+	Nelle strutture dati lineari (come gli array), l'efficienza del calcolatore deriva dalla capacità di calcolare rapidamente la posizione di un elemento. Per accedere a un dato è sufficiente conoscere:
+	\begin{enumerate}
+		\item \textbf{Indirizzo Base} ($B$): il punto di inizio della struttura dati in memoria.
+		\item \textbf{Indice dell'elemento} ($i$): la posizione relativa.
+		\item \textbf{Dimensione del dato} ($S$): lo spazio occupato da ogni singolo elemento (es. 4 byte per un \textit{integer}).
+	\end{enumerate}
+	
+	Il calcolo dell'indirizzo fisico $A$ dell'elemento $i$-esimo avviene tramite una semplice operazione aritmetica, estremamente veloce per la CPU:
+	\[ A = B + (i \times S) \]
+	
+	Questa proprietà garantisce un tempo di accesso costante ($O(1)$) a qualsiasi elemento della struttura, indipendentemente dalla sua posizione.
+	
+	\subsection{Lo Spazio di I/O e l'Interazione con il Sistema}
+	
+	L'interazione tra la CPU e il mondo esterno è mediata dal software. Nessun componente hardware può operare in modo autonomo senza una logica di controllo definita.
+	
+	\paragraph{Il processo di Bootstrap}
+	All'accensione (\textit{Power-on}), la CPU si trova in uno stato di reset e inizia a eseguire istruzioni da un indirizzo fisico prefissato (Reset Vector). Poiché la RAM è volatile e vuota all'avvio, il primo programma eseguito è il \textbf{Bootstrap}, memorizzato stabilmente nella \textbf{ROM} (BIOS/UEFI). Questo software ha il compito di inizializzare l'hardware e caricare il sistema operativo dai supporti di memoria di massa.
+	
+	\paragraph{L'Interfaccia di I/O e i Registri}
+	Ogni periferica comunica con il BUS attraverso un'interfaccia composta da una serie di \textbf{Registri di Interfaccia}. Questi sono tipicamente divisi in:
+	\begin{itemize}
+		\item \textbf{Registri Dati:} per lo scambio effettivo di informazioni.
+		\item \textbf{Registri di Stato (Status Register):} per monitorare lo stato della periferica (es. bit \textit{Ready} o \textit{Error}).
+		\item \textbf{Registri di Controllo (Control Register):} per inviare comandi alla periferica.
+	\end{itemize}
+	
+	\begin{tcolorbox}[colback=orange!5!white,colframe=orange!75!black,title=Effetti Collaterali (Side Effects)]
+		A differenza della RAM, dove l'operazione di lettura è solitamente neutra, l'accesso ai registri di I/O può presentare \textbf{effetti collaterali irreversibili}. Ad esempio, la semplice lettura di un registro dati può causare lo svuotamento di un buffer interno o il reset automatico di un flag di interruzione (come il flag \textit{FI} o \textit{Done}). Si dice quindi che la lettura può essere \textit{distruttiva}.
+	\end{tcolorbox}
+	
+	\subsection{Mappatura dello Spazio di Indirizzamento}
+	
+	La CPU vede le periferiche come se fossero locazioni di memoria. Esistono due approcci principali alla gestione degli indirizzi:
+	
+	\begin{enumerate}
+		\item \textbf{Memory-Mapped I/O (MMIO):} Le periferiche occupano una porzione dello spazio di indirizzamento della memoria RAM. La CPU usa le stesse istruzioni di lettura/scrittura (es. \texttt{MOV} o \texttt{LD/ST}) sia per la memoria che per l'I/O.
+		\item \textbf{Isolated I/O (Port-Mapped I/O):} Esiste uno spazio di indirizzamento separato per l'I/O, accessibile solo tramite istruzioni specifiche, come \texttt{IN} e \texttt{OUT} 
+	\end{enumerate}
+	
+	\paragraph{Unicità dell'indirizzo e Collisioni}
+	Affinché il sistema funzioni correttamente, è necessario che la logica di decodifica degli indirizzi sia univoca. 
+	\begin{itemize}
+		\item Se due periferiche (o una periferica e la RAM) avessero indirizzi sovrapposti, si verificherebbe un \textbf{conflitto sul bus dati}, rendendo l'informazione illeggibile o danneggiando i componenti.
+		\item \textbf{Indirizzi non allocati:} Se la CPU tenta di leggere un indirizzo a cui non corrisponde né RAM né I/O, il bus rimane "appeso" (\textit{floating}). In assenza di resistenze di pull-up/pull-down che forzano un valore (es. \texttt{0xFF}), il dato letto sarà casuale, frutto del rumore elettronico presente sulle linee.
+	\end{itemize}
+	
+	\paragraph{Memoria Video}
+	Un caso particolare è la memoria video (VRAM), mappata direttamente nello spazio di indirizzamento della CPU. Scrivere in questa zona di memoria non altera solo dei dati binari, ma produce l'effetto collaterale visibile di cambiare i pixel sul monitor.
+	
+	\subsection{CPU - Il Ciclo Fondamentale (Fetch-Execute)}
+	Il funzionamento della CPU è regolato da un ciclo continuo basato sul registro \textbf{IP} (\textit{Instruction Pointer}, o \textit{PC - Program Counter} in altre architetture). Questo registro contiene l'indirizzo di memoria della prossima istruzione da eseguire.
+	
+	Il ciclo segue tre fasi principali:
+	\begin{enumerate}
+		\item \textbf{Fetch:} La CPU preleva l'istruzione dalla memoria all'indirizzo indicato da IP.
+		\item \textbf{Decode:} L'unità di controllo interpreta l'opcode dell'istruzione e i relativi operandi.
+		\item \textbf{Execute:} L'istruzione viene eseguita e l'IP viene incrementato per puntare all'istruzione successiva (o aggiornato in caso di salti/CALL).
+	\end{enumerate}
+	
+	\subsection{L'Evoluzione a 64 bit (AMD64)}
+	L'architettura a 64 bit estende la precedente IA-32 garantendo la retrocompatibilità (può eseguire codice a 32 bit). Le novità principali riguardano l'estensione della dimensione dei dati e l'aumento del numero di registri.
+	
+	\subsubsection{Organizzazione dei Registri}
+	Nell'architettura a 64 bit, il prefisso \textbf{'E'} (Extended, 32 bit) viene sostituito dal prefisso \textbf{'R'} (64 bit). Inoltre, il numero di registri \textit{General Purpose} viene raddoppiato, passando da 8 a 16.
+	
+	\begin{center}
+		\begin{tikzpicture}[x=0.75cm,y=0.5cm]
+			% Disegno della griglia dei registri
+			\draw[thick, blue!50] (0,0) grid (8,10);
+			\draw[thick] (4,2) grid (8,10);
+			
+			% Etichette registri originali (estesi)
+			\node[anchor=west] at (8.2,9.5) {RAX (EAX)};
+			\node[anchor=west] at (8.2,8.5) {RBX (EBX)};
+			\node[anchor=west] at (8.2,7.5) {RCX (ECX)};
+			\node[anchor=west] at (8.2,6.5) {RDX (EDX)};
+			\node[anchor=west] at (8.2,5.5) {RDI (EDI)};
+			\node[anchor=west] at (8.2,4.5) {RSI (ESI)};
+			\node[anchor=west] at (8.2,3.5) {RBP (EBP)};
+			\node[anchor=west] at (8.2,2.5) {RSP (ESP)};
+			
+			% Nuovi registri (R8-R15)
+			\node[anchor=west, blue] at (8.2,1.5) {R8 \dots};
+			\node[anchor=west, blue] at (8.2,0.5) {R15};
+			
+			% Indicazioni parti basse
+			\draw[thick, decoration={brace,mirror,raise=0.2cm}, decorate] (6,1.8) -- (7,1.8) node[pos=0.5,anchor=north,yshift=-0.3cm] {H};
+			\draw[thick, decoration={brace,mirror,raise=0.2cm}, decorate] (7,1.8) -- (8,1.8) node[pos=0.5,anchor=north,yshift=-0.3cm] {L};
+			
+			\node[anchor=south] at (4,10.2) {32 bit};
+			\draw[<-, blue] (2,10) -- (2,11) node[above] {Estensione a 64 bit};
+		\end{tikzpicture}
+	\end{center}
+	
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Reminder: Tipologie di Operandi]
+		L'architettura mantiene tre tipologie di operandi con la stessa sintassi dell'Assembler a 32 bit:
+		\begin{itemize}
+			\item \textbf{Immediato:} Un valore costante (es. \texttt{\$0x10}).
+			\item \textbf{Registro:} Accesso diretto ai registri (es. \texttt{\%rax}).
+			\item \textbf{Memoria:} Accesso tramite indirizzo (es. \texttt{(\%rbx)}).
+		\end{itemize}
+	\end{tcolorbox}
+	
+	\subsection{Indirizzamento Relativo e Limiti Fisici}
+	Una delle novità più rilevanti è l'introduzione dell'indirizzamento relativo al registro IP: \texttt{offset(\%rip)}.
+	
+	\paragraph{Indirizzamento RIP-relative}
+	Questo metodo specifica quanto dista il dato dall'istruzione corrente (\textit{RIP contiene già l'indirizzo della prossima istruzione}). 
+	Per ottimizzare la lunghezza delle istruzioni, gli \textbf{immediati} e gli \textbf{offset} rimangono solitamente a \textbf{32 bit}. Ciò significa che il salto o la distanza tra codice (\texttt{.text}) e dati (\texttt{.data}) non può superare i $\pm 2$ GB (il range di un intero a 32 bit con segno).
+	
+	\paragraph{Istruzione MOVABS}
+	L'unica eccezione a questa regola è l'istruzione \textbf{\texttt{MOVABS}}. 
+	\begin{itemize}
+		\item \textbf{Reminder:} Mentre la normale \texttt{MOV} supporta solo operandi a 32 bit (estesi poi a 64), \texttt{MOVABS} permette di caricare un valore immediato a 64 bit direttamente in un registro o di accedere a un indirizzo di memoria assoluto a 64 bit.
+	\end{itemize}
+	
+	\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Vincolo dei 2GB]
+		L'assemblatore deve conoscere preventivamente la posizione del programma. Poiché le istruzioni \texttt{CALL} e gli accessi ai dati tramite offset da \texttt{\%rip} usano valori a 32 bit, le sezioni del programma devono essere "vicine" in memoria (distanza $<$ 2GB).
+	\end{tcolorbox}
+	
+	\subsection{Spazio di Indirizzamento e Indirizzi Canonici}
+	
+	Sebbene l'architettura AMD64 supporti teoricamente indirizzi a 64 bit ($2^{64}$ byte, ovvero circa 16 Exabyte), le implementazioni attuali dei processori (Intel e AMD) utilizzano solitamente un'ampiezza di \textbf{48 bit} per gli indirizzi fisici e virtuali. Ciò consente di indirizzare fino a \textbf{256 Terabyte}.
+	
+	\paragraph{Normalizzazione: La Forma Canonica}
+	Per garantire la compatibilità futura, l'architettura impone che ogni indirizzo sia in \textbf{forma canonica}. Poiché solo i primi 48 bit sono utilizzati, l'hardware richiede che i restanti 16 bit (dal 48 al 63) siano una copia esatta del bit 47 (\textit{sign extension}):
+	\begin{itemize}
+		\item Se il bit 47 è \textbf{0}, i bit 48-63 devono essere tutti \textbf{0}. Gli indirizzi validi vanno da \texttt{0x0000 0000 0000 0000} a \texttt{0x0000 7FFF FFFF FFFF}.
+		\item Se il bit 47 è \textbf{1}, i bit 48-63 devono essere tutti \textbf{1}. Gli indirizzi validi vanno da \texttt{0xFFFF 8000 0000 0000} a \texttt{0xFFFF FFFF FFFF FFFF}.
+	\end{itemize}
+	
+	Questo meccanismo crea un enorme "buco" di indirizzi non utilizzabili nel mezzo dello spazio di indirizzamento, dividendo la memoria in due tronconi (spesso usati per distinguere lo \textit{User Space} dal \textit{Kernel Space}). Se un programma tenta di usare un indirizzo non canonico, la CPU genera un'eccezione (\textit{General Protection Fault}).
+	
+	\subsection{Allineamento dei Dati in Memoria}
+	
+	Un oggetto si definisce \textbf{allineato} se il suo indirizzo di partenza è un multiplo della sua dimensione (es. un intero da 8 byte allineato avrà un indirizzo $A$ tale che $A \pmod 8 = 0$).
+	
+	\paragraph{Il costo del disallineamento}
+	Possiamo immaginare la memoria a 64 bit come una sequenza di righe da \textbf{8 byte}. Il bus dati e la logica di controllo della CPU sono ottimizzati per leggere un'intera riga (o una sua parte contenuta internamente) in un unico ciclo di memoria.
+	
+	\begin{center}
+		\begin{tikzpicture}[yscale=0.5, xscale=1]
+			\draw[thick] (0,0) grid (8,4);
+			% Variabile allineata
+			\fill[green!30, opacity=0.5] (0,2) rectangle (8,3);
+			\node at (4,2.5) {\footnotesize Allineata (1 ciclo)};
+			
+			% Variabile disallineata (quella blu della tua immagine)
+			\fill[blue!40, opacity=0.7] (4,1) rectangle (8,2);
+			\fill[blue!40, opacity=0.7] (0,0) rectangle (4,1);
+			\node at (4,0.5) {\footnotesize Disallineata (2 cicli + riordino)};
+			
+			\draw[<->] (-0.5,0) -- (-0.5,4) node[midway, left, rotate=90] {Indirizzi};
+		\end{tikzpicture}
+	\end{center}
+	
+	Se una variabile di 8 byte è posta a cavallo tra due righe (come mostrato in blu nel diagramma):
+	\begin{enumerate}
+		\item La CPU deve effettuare \textbf{due accessi} distinti alla memoria per prelevare entrambe le righe.
+		\item È necessaria un'operazione interna di \textbf{shifting e masking} (riordino dei pezzi) per ricostruire il dato originale, poiché i byte arrivano al processore nelle posizioni sbagliate del bus.
+	\end{enumerate}
+	
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Differenze tra Architetture]
+		\begin{itemize}
+			\item \textbf{Intel (x86/x86-64):} Gestisce il disallineamento in hardware. Il programma funziona, ma subisce un calo di prestazioni dovuto ai cicli extra.
+			\item \textbf{ARM / RISC:} Spesso sono più rigide. Un accesso disallineato può causare un \textit{Alignment Fault}, interrompendo l'esecuzione del programma se non gestito esplicitamente dal software.
+		\end{itemize}
+	\end{tcolorbox}
+	\subsection{Rappresentazione dei dati: Endianness}
+	
+	Quando dobbiamo memorizzare un dato più grande di un singolo byte (ad esempio una \textit{word} da 2 byte o una \textit{quadword} da 8 byte), sorge il problema dell'ordine dei byte in memoria. 
+	
+	Consideriamo l'esempio del valore esadecimale \texttt{0x1122}:
+	\begin{itemize}
+		\item \texttt{11} è il byte più significativo (MSB - \textit{Most Significant Byte}).
+		\item \texttt{22} è il byte meno significativo (LSB - \textit{Least Significant Byte}).
+	\end{itemize}
+	
+	Esistono due strategie opposte:
+	
+	\begin{enumerate}
+		\item \textbf{Big Endian:} Il byte più significativo (\texttt{11}) viene memorizzato all'indirizzo più basso. È l'ordine "naturale" di lettura (da sinistra a destra) ed è lo standard utilizzato nelle comunicazioni di rete (\textit{Network Byte Order}).
+		\item \textbf{Little Endian:} Il byte meno significativo (\texttt{22}) viene memorizzato all'indirizzo più basso. È l'architettura adottata da \textbf{Intel} e AMD.
+	\end{enumerate}
+	
+	\paragraph{Analisi dello schema di memoria}
+	Nell'immagine, la memoria è rappresentata come una griglia dove ogni riga contiene 8 byte (64 bit). Gli indirizzi aumentano da destra verso sinistra all'interno della riga, o seguendo la numerazione delle righe (0, 8, 16...).
+	
+	\begin{center}
+		\begin{tikzpicture}[scale=0.8]
+			% Griglia memoria
+			\draw[thick] (0,0) grid (8,3);
+			
+			% Indirizzi di riga
+			\node[anchor=west] at (8.2, 2.5) {0};
+			\node[anchor=west] at (8.2, 1.5) {8};
+			\node[anchor=west] at (8.2, 0.5) {16};
+			
+			% Numerazione byte (colonne)
+			\foreach \x in {0,1,2,3,4,5,6,7}
+			\node at (7.5-\x, 3.3) {\small \x};
+			
+			% Inserimento valore 0x1122 in Little Endian
+			\node at (7.5, 2.5) {\texttt{22}}; % Indirizzo 0
+			\node at (6.5, 2.5) {\texttt{11}}; % Indirizzo 1
+			
+			\draw[->, thick] (-1, 2.5) -- (-1, 0) node[midway, left] {Indirizzi crescenti};
+		\end{tikzpicture}
+	\end{center}
+	
+	Come si nota, nel \textbf{Little Endian}, il valore appare "al contrario" se guardiamo la memoria: all'indirizzo 0 troviamo la parte "piccola" (\texttt{22}).
+	
+	
+	\subsection{Nomenclatura e Potenze di 2}
+	
+	PIccolo reminder sui valori Esadecimali. 
+	
+	\paragraph{Esadecimale e Byte}
+	Ogni byte (8 bit) è rappresentato esattamente da \textbf{due cifre esadecimali} (es. \texttt{0xFF} = \texttt{1111 1111}). Questo perché una cifra esadecimale copre esattamente 4 bit ($2^4 = 16$).
+	
+	\paragraph{Proprietà delle potenze di 2}
+	Per i calcoli sugli indirizzi e sulle maschere di bit (bitmask), ricordiamo le seguenti forme notevoli in binario:
+	
+	\begin{itemize}
+		\item $2^a$: In binario è rappresentato da un \texttt{1} seguito da $a$ zeri.
+		\[ 2^3 = 8_{10} = 1000_2 \]
+		\item $2^a - 1$: In binario è rappresentato da una sequenza di $a$ uni. Questa forma è utilissima per creare filtri che "accendono" un certo numero di bit.
+		\[ 2^3 - 1 = 7_{10} = 111_2 \]
+	\end{itemize}
+	
+	\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Barbatrucco]
+		Quando vedi un indirizzo esadecimale e devi capire se un oggetto è allineato a $2^n$ byte, basta guardare le ultime cifre:
+		\begin{itemize}
+			\item Allineato a 4 byte ($2^2$): l'ultima cifra esadecimale deve essere \texttt{0, 4, 8, C}.
+			\item Allineato a 16 byte ($2^4$): l'ultima cifra esadecimale deve essere \texttt{0}.
+		\end{itemize}
+	\end{tcolorbox}
+	\subsection{Offset, Intervalli e Circolarità}
+	
+	L'indirizzamento della memoria si basa su concetti geometrici e algebrici precisi che permettono alla CPU di navigare tra i dati.
+	
+	\paragraph{Offset e Intervalli}
+	L'**offset** rappresenta la distanza tra due indirizzi. Se abbiamo un indirizzo base $x$ e vogliamo raggiungere un indirizzo $y$, l'offset è la quantità di indirizzi (byte) da "saltare". 
+	\begin{itemize}
+		\item Per convenzione, si utilizzano intervalli **semiaperti a destra** $[x, y)$. 
+		\item Questa scelta è vantaggiosa perché la dimensione dell'intervallo è data semplicemente da $y - x$.
+		\item Permette la **composizione** immediata: $[x, y) + [y, z) = [x, z)$. In questo modo, l'indirizzo di confine $y$ viene contato una sola volta, evitando errori di tipo "off-by-one".
+	\end{itemize}
+	
+	\paragraph{Circolarità dello Spazio}
+	Lo spazio di indirizzamento è **circolare** (aritmetica modulare $| \cdot |_{2^n}$). Questo è dovuto alla natura fisica della CPU:
+	\begin{itemize}
+		\item Se abbiamo un bus indirizzi a $n$ fili, possiamo rappresentare solo $2^n$ valori.
+		\item Sommando 1 all'indirizzo massimo ($2^n - 1$), si otterrebbe un numero con un '1' nell'$(n+1)$-esimo bit (il \textit{carry}). Poiché abbiamo solo $n$ fili, quel bit viene scartato e l'indirizzo torna a \texttt{0}.
+	\end{itemize}
+	
+	\paragraph{Gestione del Segno negli Offset}
+	\begin{itemize}
+		\item Se l'offset è espresso su $n$ bit (la stessa dimensione dell'indirizzo), la circolarità rende irrilevante la distinzione tra positivo e negativo grazie alla rappresentazione in \textbf{Complemento a 2}.
+		\item Se l'offset è espresso su un numero di bit **inferiore a $n$** (es. un immediato a 12 bit in un'istruzione a 64 bit), è fondamentale conoscere il segno. In questo caso, la CPU effettua la \textbf{estensione del segno} per preservare il valore numerico corretto durante la somma con l'indirizzo base.
+	\end{itemize}
+	
+	\subsection{Confini (Boundaries) e Regioni Naturali}
+	
+	Lo spazio di indirizzamento viene suddiviso in blocchi di dimensione pari a potenze di 2 ($2^b$).
+	
+	\paragraph{Definizione di Boundary}
+	Un indirizzo si dice trovarsi su un **confine** (\textit{boundary}) di $2^b$ se è un multiplo esatto di $2^b$. 
+	\begin{itemize}
+		\item \textbf{Proprietà binaria:} Un indirizzo al confine di una porzione di $2^b$ byte avrà sempre i $b$ bit meno significativi (LSB) pari a **zero**.
+	\end{itemize}
+	
+	\paragraph{Regioni Naturali}
+	Una \textbf{regione naturale} di dimensione $2^b$ è l'insieme degli indirizzi compresi tra due confini consecutivi di $2^b$. 
+	Per identificare un indirizzo all'interno di una geografia di regioni, dividiamo i suoi $n$ bit in due parti:
+	\begin{enumerate}
+		\item \textbf{n-b bit più significativi (MSB):} Rimangono **costanti** per tutti gli indirizzi all'interno della stessa regione. Essi rappresentano il "nome" o l'indice della regione (il "regime naturale" citato nei tuoi appunti).
+		\item \textbf{b bit meno significativi (LSB):} Variano da $0$ a $2^b - 1$. Rappresentano l'**offset** (la posizione relativa) all'interno di quella specifica regione.
+	\end{enumerate}
+	
+	\begin{center}
+		\begin{tikzpicture}[scale=0.8]
+			\draw[thick] (0,0) rectangle (8,1);
+			\draw[dashed] (5,0) -- (5,1);
+			\node at (2.5,0.5) {Indice Regione ($n-b$ bit)};
+			\node at (6.5,0.5) {Offset ($b$ bit)};
+			\draw[decorate,decoration={brace,amplitude=5pt}] (5,-0.2) -- (0,-0.2) node[midway,below=5pt] {Costanti nella regione};
+			\draw[decorate,decoration={brace,amplitude=5pt}] (8,-0.2) -- (5,-0.2) node[midway,below=5pt] {Variano $0 \dots 2^b-1$};
+		\end{tikzpicture}
+	\end{center}
+	
+	\begin{tcolorbox}[colback=yellow!5!white,colframe=yellow!75!black,title=Esempio Pratico: Pagine da 4KB]
+		Se le regioni sono pagine da $4KB$ ($2^{12}$), allora $b=12$. 
+		\begin{itemize}
+			\item Gli ultimi 12 bit dell'indirizzo indicano dove si trova il dato nella pagina.
+			\item I restanti bit in alto indicano quale pagina stiamo leggendo.
+		\end{itemize}
+	\end{tcolorbox}
+	
+	\subsection{L'Interfaccia Fisica: Bus Dati e Byte Enable}
+	
+	Fisicamente, la memoria non è un array di singoli byte, ma è organizzata in \textbf{righe da 8 byte} (64 bit), coerentemente con la larghezza del bus dati. 
+	
+	Quando la CPU deve accedere a un dato, non invia l'indirizzo esatto del singolo byte sul bus indirizzi, ma opera in questo modo:
+	\begin{itemize}
+		\item \textbf{Indirizzo di Riga:} Invia i bit più significativi dell'indirizzo, che identificano la riga da 8 byte (corrispondenti a un indirizzo multiplo di 8).
+		\item \textbf{Byte Enable ($/BE_0 \dots /BE_7$):} Utilizza 8 segnali di controllo dedicati per indicare quali degli 8 byte all'interno di quella riga devono essere effettivamente letti o scritti.
+	\end{itemize}
+	\begin{center}
+		\begin{tikzpicture}[node distance=0.5cm]
+			\draw[thick] (0,0) -- (0,2);
+			\draw[->] (0,1.8) -- (2,1.8) node[right] {N. Riga (A[63:3])};
+			\draw[->] (0,1.3) -- (2,1.3) node[right] {$/BE_0$};
+			\draw[->] (0,0.8) -- (2,0.8) node[right] {$/BE_1 \dots /BE_6$};
+			\draw[->] (0,0.3) -- (2,0.3) node[right] {$/BE_7$};
+			\node at (1, -0.5) {\textit{Segnali emessi dalla CPU}};
+		\end{tikzpicture}
+	\end{center}
+	
+	\paragraph{Esempio: Lettura disallineata}
+	Supponiamo di voler caricare un valore a 32 bit (4 byte) in \texttt{\%eax} partendo dall'indirizzo \textbf{7}. Questo dato si trova a cavallo tra due righe fisiche:
+	\begin{enumerate}
+		\item \textbf{Ciclo 1 (Riga 0):} La CPU richiede la riga che inizia all'indirizzo 0, attivando solo il segnale $/BE_7$.
+		\item \textbf{Ciclo 2 (Riga 1):} La CPU richiede la riga successiva (indirizzo 8), attivando i segnali $/BE_0, /BE_1, /BE_2$.
+		\item \textbf{Riallineamento:} L'unità di controllo interna della CPU deve traslare (shift) e combinare i frammenti ottenuti per ricostruire il dato originale prima di memorizzarlo nel registro.
+	\end{enumerate}
+	
+	Questa architettura spiega perché l'allineamento dei dati è cruciale per le prestazioni: un accesso allineato richiede un solo ciclo di bus, mentre uno disallineato ne richiede almeno due più il tempo di elaborazione interna.
+	\subsection{L'Organizzazione Fisica della Memoria: Righe e Byte Enable}
+	
+	A livello logico, pensiamo alla memoria come a una lunga sequenza di byte individuali. Tuttavia, a livello \textbf{fisico}, la CPU comunica con la RAM tramite un bus dati a 64 bit. Questo significa che la memoria è organizzata in \textbf{righe da 8 byte} ciascuna.
+	
+	\paragraph{Il Bus Indirizzi e i segnali $/BE$}
+	Quando la CPU emette un indirizzo $A$ per leggere un dato, il controller di memoria scompone l'operazione:
+	\begin{itemize}
+		\item \textbf{Indirizzo di Riga ($A[63:3]$):} I bit più significativi dell'indirizzo indicano \textit{quale} riga da 8 byte deve essere selezionata (es. Riga 0, Riga 8, Riga 16...).
+		\item \textbf{Byte Enable ($/BE_0 \dots /BE_7$):} Sono 8 segnali fisici (fili) che fungono da "interruttori" per i singoli byte all'interno della riga selezionata. 
+	\end{itemize}
+	
+	Se la CPU vuole leggere solo il terzo byte della riga 0, invierà l'indirizzo di riga 0 e attiverà solo il segnale $/BE_2$. Se vuole leggere un intero a 32 bit (4 byte) allineato, attiverà contemporaneamente $/BE_0, /BE_1, /BE_2, /BE_3$.
+	
+	
+	
+	\subsection{Analisi di una Lettura Disallineata}
+	
+	Il problema sorge quando un dato di $N$ byte \textbf{attraversa il confine} tra due righe fisiche. Riprendiamo l'esempio di una \texttt{MOV} di un dato a 32 bit (4 byte) a partire dall'indirizzo \textbf{7}.
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{@{}l|c|c|c|c|c|c|c|c|@{}}
+			\toprule
+			\textbf{Indirizzo} & \textbf{+0} & \textbf{+1} & \textbf{+2} & \textbf{+3} & \textbf{+4} & \textbf{+5} & \textbf{+6} & \textbf{+7} \\ \midrule
+			\textbf{Riga 0}    & byte 0      & byte 1      & byte 2      & byte 3      & byte 4      & byte 5      & byte 6      & \cellcolor{blue!20}\textbf{Dato[0]} \\ \midrule
+			\textbf{Riga 8}    & \cellcolor{blue!20}\textbf{Dato[1]} & \cellcolor{blue!20}\textbf{Dato[2]} & \cellcolor{blue!20}\textbf{Dato[3]} & byte 11     & byte 12     & byte 13     & byte 14     & byte 15     \\ \bottomrule
+		\end{tabular}
+		\caption{Esempio di dato a 32 bit memorizzato all'indirizzo 7.}
+	\end{table}
+	
+	Poiché il bus può accedere a \textbf{una sola riga per ciclo}, la CPU deve eseguire due operazioni distinte:
+	
+	\begin{enumerate}
+		\item \textbf{Ciclo 1 (Accesso alla Riga 0):}
+		\begin{itemize}
+			\item La CPU richiede la riga che inizia all'indirizzo 0.
+			\item Attiva solo \textbf{$/BE_7$}.
+			\item Riceve il primo byte del dato (\textit{Dato[0]}) e lo salva in un registro temporaneo interno.
+		\end{itemize}
+		
+		\item \textbf{Ciclo 2 (Accesso alla Riga 1):}
+		\begin{itemize}
+			\item La CPU richiede la riga che inizia all'indirizzo 8.
+			\item Attiva i segnali \textbf{$/BE_0, /BE_1, /BE_2$}.
+			\item Riceve i restanti tre byte (\textit{Dato[1,2,3]}).
+		\end{itemize}
+	\end{enumerate}
+	
+	\paragraph{Conclusione: Shifting e Prestazioni}
+	Una volta ottenuti i due pezzi, la CPU deve "shiftare" (scorrere) i bit internamente per riallinearli e formare il numero a 32 bit corretto. 
+	\begin{itemize}
+		\item \textbf{Flessibilità:} I segnali $/BE$ permettono di leggere qualsiasi combinazione di byte, rendendo possibile il disallineamento.
+		\item \textbf{Costo:} Una lettura disallineata è intrinsecamente più lenta perché richiede \textbf{due cicli di bus} anziché uno solo, oltre a un lavoro extra di manipolazione dei bit all'interno della CPU.
+	\end{itemize}
+	
+\end{document}

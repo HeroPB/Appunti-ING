@@ -1,0 +1,801 @@
+\documentclass[a4paper,12pt]{article}
+
+% Pacchetti utili
+\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\begin{document}
+	
+	\begin{titlepage}
+		\centering
+		
+		% Intestazione Università
+		{\scshape\LARGE Università di Pisa \par}
+		\vspace{0.5cm}
+		
+		% Titolo corso
+		{\Huge\bfseries Calcolo Numerico \par}
+		\vspace{0.5cm}
+		{\Large Anno Accademico 2025--2026 \par}
+		
+		\vfill
+		
+		% Autore
+		{\Large\textbf{Pietro Bacigalupi} \par}
+		\vspace{0.5cm}
+		
+		\vfill
+		
+		% Data
+		{\large \today\par}
+		
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	
+	\section{Teoria degli Errori}
+	
+	\subsection{Rappresentazione in Virgola Mobile}
+	
+	Fissata una base $\beta > 1$, con $\beta \in \mathbb{N}$, un numero reale $x$ può essere rappresentato nella forma:
+	
+	\begin{equation}
+		x = \mathrm{segno}(x) \cdot \beta^{e} \cdot \sum_{i=1}^{\infty} \alpha_i \, \beta^{-i}
+	\end{equation}
+	
+	dove:
+	
+	\begin{itemize}
+		\item $\beta$ è la base della rappresentazione;
+		\item $e \in \mathbb{Z}$ è l'esponente;
+		\item $\alpha_i$ sono le cifre della mantissa, tali che
+	\end{itemize}
+	
+	\begin{equation}
+		0 \le \alpha_i \le \beta - 1
+	\end{equation}
+	
+	e
+	
+	\[
+	\mathrm{segno}(x) =
+	\begin{cases}
+		+1 & \text{se } x > 0 \\
+		-1 & \text{se } x < 0
+	\end{cases}
+	\]
+	
+	\begin{tcolorbox}[title=Attenzione, colback=white]
+		La rappresentazione così non è unica, ad esempio: $3{,}14 = 0{,}0314 \cdot 10^{2}$.
+	\end{tcolorbox}
+	
+	\subsection{Teorema di Rappresentazione}
+	Data $\beta > 1 \in \mathbb{N}$, $x \in \mathbb{R} \neq 0$ allora $\exists!$ rappresentazione di $x$ in base $\beta :$
+	
+	\begin{enumerate}
+		\item $\alpha_1 \neq 0$
+		\item $\nexists K \in \mathbb{N} : \alpha_j = \beta-1 \forall j>k$
+	\end{enumerate}
+	
+	L'unica rappresentazione che verifica il teorema si dice \textbf{Rappresentazione in virgola mobile normalizzata}.
+	Dove $\sum_{i=1}^{\infty} \alpha_i \, \beta^{-i}$ si dice \textbf{Mantissa} di $x \in \mathbb{R}$ e vale sempre che $ \beta^{-1} < \sum_{i=1}^{\infty} \alpha_i \, \beta^{-i} < 1$
+	
+	\begin{tcolorbox}[title=Esempio]
+		La $(1)$ esclude rappresentazioni con primo numero decimale uguale a 0:
+		\begin{itemize}
+			\item $0,\mathbf{0}123 \cdot 10^{3}$ Non va bene
+			\item $1230,\mathbf{0} \cdot 10^{0}$ Non va bene
+			\item $0,123 \cdot 10^{5}$ Va bene
+		\end{itemize}
+		La $(2)$ esclude numeri in periodici con 9 finali (Esempio $1,4\overline{9}$, in base 10)
+ 	\end{tcolorbox}
+ 	
+ 	\subsection{Numeri di Macchina}
+ 	
+ 	\paragraph{Problema}: abbiamo $\inf$ cifre, ne possiamo tenere in considerazione solo un numero finito. Come facciamo? Tronchiamo la mantissa e limitiamo l'esponente.
+ 	
+ 	\paragraph{Definizione}: Dati, $\beta$, $m$, $L$, $U$, $\beta>1$, $L \leq u$ e $m>0$ definiamo $\textbf{Insieme dei numeri di macchina}$ la funzione
+		\[
+		F(\beta,m,L,U) =
+		\left\{
+		x \in \mathbb{R}
+		\;\middle|\;
+		x = \mathrm{segno}(x)\,\beta^{e}
+		\sum_{i=1}^{m} \alpha_i \beta^{-i},
+		\;
+		L \le e \le U,
+		\;
+		\alpha_i \in \{0,1,\dots,\beta-1\},
+		\;
+		\alpha_1 \neq 0
+		\right\} \cup \left\{0\right\}
+		\]
+		
+		I numeri di macchina sono un sottoinsieme dei numeri reali esattamente rappresentabili da un software 
+		
+		\paragraph{Esempio} $\beta = 2$ $m = 3$ $L = -1$ $U = 3$
+		Ci sono un numero costante di elementi in $\left[\beta^{e-1}, \beta^{e}\right)$ e sono equispaziati.\newline
+		Stiamo studiando quindi i \textbf{numeri macchina di base 2 con 3 cifre di mantissa} ed esponente da -1 a 3 \newline
+		Sono equispaziati in \textbf{scala logaritmica} negli intervalli
+		\begin{equation*}
+			\left[2^{i}, 2^{i+1}\right)
+		\end{equation*}
+		quindi:
+		\begin{enumerate}
+			\item $\left[2^{-1}, 2^{0}\right) =  \left[1/2, 1\right]$
+			\item $\left[2^{0}, 2^{1}\right) =  \left[1, 2\right]$
+			\item $\left[2^{1}, 2^{2}\right) =  \left[2, 4\right]$
+			\item $\left[2^{2}, 2^{3}\right) =  \left[4, 8\right]$
+		\end{enumerate}
+		\begin{tcolorbox} [title=Osservazione]
+			Minimo Rappresentabile:
+			\begin{equation*}
+				\mathbf{\beta^{L} \cdot \alpha_1 \cdot \beta^{-1} = \beta^{L-1}} \text{ dato che } \alpha_1 = 1
+			\end{equation*}
+			
+			Massimo Rappresentabile:
+			\begin{equation*}
+				\beta^{U}\cdot\left(\beta-1\right)\sum_{j=1}^{m}\beta^{-j} = \beta^{U}\cdot\left(\beta-1\right)\left(\frac{1-\beta^{-m-1}}{1-\beta^{-1}}-1\right)
+				= \beta^{U}\left(1-\beta^{-m}\right)
+			\end{equation*}
+			
+			Quanti sono i numeri macchina rappresentabili:
+			
+			\[
+			\underbrace{2}_{\text{segno}}
+			\quad
+			\underbrace{(U - L + 1)}_{\text{esponente}}
+			\quad
+			\underbrace{\left(\beta^{m} - \beta^{m-1}\right)}_{\text{mantissa}}
+			\quad
+			\underbrace{+1}_{\{0\}}
+			\]
+		\end{tcolorbox}
+		
+	\subsection{Arrotondamento nelle macchine}
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{l c c c c c c c}
+			\toprule
+			Formato & $\beta$ & $m$ & $L$ & $U$ & Byte & $\varepsilon (precisione)$ & $|F|$ \\
+			\midrule
+			Double & 2 & 53 & -1021 & 1024 & 8 & $2^{-52}$ & $2(2046)(2^{53}-2^{52})+1$ \\
+			Single & 2 & 24 & -124  & 128  & 4 & $2^{-23}$ & $2(253)(2^{24}-2^{23})+1$ \\
+			\bottomrule
+		\end{tabular}
+		\caption{Parametri IEEE 754 in virgola mobile}
+	\end{table}
+	\paragraph{Osservazione}
+	Dato $x \in \mathbb{R}$, in generale $x \notin F(\beta,m,L,U)$.
+	Si distinguono tre casi:
+	
+	\begin{enumerate}
+		\item Se $|x| > \beta^{U}(1-\beta^{-m})$ si ha \textbf{overflow}.
+		
+		\item Se $0 < |x| < \beta^{L-1}$ si ha \textbf{underflow}.
+		
+		\item Se
+		\[
+		\beta^{L-1} \le |x| \le \beta^{U}(1-\beta^{-m}),
+		\]
+		il numero è rappresentabile in ordine di grandezza ma può richiedere
+		\textbf{arrotondamento}.
+	\end{enumerate}
+	
+	\paragraph{Definizione}
+	Si definisce \textbf{funzione di arrotondamento} una funzione
+	
+	\[
+	\mathrm{RD} : \mathbb{R} \longrightarrow F(\beta,m,L,U)
+	\]
+	
+	che ad ogni numero reale $x$ associa un numero macchina
+	$\mathrm{RD}(x)$ appartenente all'insieme $F(\beta,m,L,U)$.	
+	
+	Le scelte più comuni sono:
+	\begin{enumerate}
+		\item \textbf{Troncamento}: $TR(x) = \lfloor x \rfloor \forall x$
+		\item \textbf{Round-UP}: $UP(x) = \lceil x \rceil \forall x$
+		\item \textbf{Round-To-Nearest}: 
+		\[
+		\mathrm{RN(x)} = 
+		\begin{cases}
+			\lfloor x \rfloor \textrm{ se } \alpha_{m+1} < \frac{\beta}{2} \\
+			\lceil x \rceil \textrm{ se } \alpha_{m+1} \geq \frac{\beta}{2}
+		\end{cases}
+		\]
+	\end{enumerate}
+	Quella usata dai calcolatori, che useremo noi, è la \textbf{(3)}
+	
+	\paragraph{Definizione}
+	
+	Sia $x \in \mathbb{R}$ e sia $\mathrm{RN}(x)$ il numero macchina ottenuto
+	mediante arrotondamento al più vicino (round-to-nearest).
+	
+	\medskip
+	
+	Si definisce \textbf{errore assoluto di arrotondamento} la quantità
+	
+	\[
+	\delta(x) = x - \mathrm{RN}(x).
+	\]
+	
+	Si definisce \textbf{errore relativo di arrotondamento} la quantità
+	
+	\[
+	\varepsilon(x) = \frac{\delta(x)}{x},
+	\qquad x \neq 0.
+	\]
+	
+	\medskip
+	
+	Nel caso di arrotondamento al più vicino vale la stima
+	
+	\[
+	|\delta(x)| \le \frac{1}{2}\,\beta^{e-m}.
+	\]
+	
+	Poiché $|x| \ge \beta^{e-1}$, si ottiene
+	
+	\[
+	|\varepsilon(x)|
+	= \frac{|\delta(x)|}{|x|}
+	\le
+	\frac{\frac{1}{2}\beta^{e-m}}{\beta^{e-1}}
+	=
+	\frac{1}{2}\beta^{1-m}.
+	\]
+	
+	Si osserva che il termine finale non dipende da $x$.
+	
+	\medskip
+	
+	La quantità
+	
+	\[
+	u = \frac{1}{2}\beta^{1-m}
+	\]
+	
+	è detta \textbf{precisione di macchina} (o \emph{unit roundoff}).
+	In doppia precisione (IEEE 754):
+	\[
+	u = 2^{-53} \approx 1.11 \times 10^{-16}.
+	\]
+	
+	\subsection{Errore nel calcolo di funzione} 
+	Le operazioni di macchina sono 4 e sono $\otimes \oplus \ominus \oslash$ dove
+	\begin{itemize}
+		\item $x \oplus y = RN(x+y)$
+		\item $x \ominus y = RN(x-y)$
+		\item $x \otimes y = RN(x \cdot y)$
+		\item $x \oslash y = RN(x \div y)$
+	\end{itemize} 
+	Non è valida la proprietà associativa e distributiva
+	\subsubsection{Analisi dell'Errore nel Calcolo di Funzioni}
+	
+	Sia $f: \mathbb{R}^m \to \mathbb{R}$ una funzione matematica che vogliamo valutare.
+	Si vuole calcolare il valore $f(p_0)$, dove il punto di partenza è un vettore di $m$ componenti:
+	\[
+	p_0 = (x_1^{(0)}, x_2^{(0)}, \dots, x_m^{(0)}) \in \mathbb{R}^m
+	\]
+	
+	\paragraph{Fonti dell'errore:}
+	Nel passaggio dalla teoria alla pratica, incontriamo tre ostacoli principali:
+	
+	\begin{enumerate}
+		\item \textbf{Approssimazione della funzione}: La funzione teorica $f$ viene sostituita da una funzione $\tilde{f}$ che il calcolatore sa gestire (ovvero che usa solo operazioni elementari). 
+		\textit{Esempio: calcolare $e^x$ usando solo i primi termini dello sviluppo di Taylor.}
+		
+		\item \textbf{Algoritmizzazione}: La funzione $\tilde{f}$ viene tradotta in un algoritmo $\tilde{f}_a$. Qui entrano in gioco le operazioni di macchina $\oplus, \ominus, \otimes, \oslash$, ognuna delle quali introduce un errore di arrotondamento.
+		
+		\item \textbf{Arrotondamento dei dati}: Il punto $p_0$ originale spesso non è rappresentabile esattamente in memoria (pensa a $\pi$ o a numeri con troppe cifre). Viene quindi sostituito dal numero di macchina più vicino: $p_1 = \mathrm{RN}(p_0)$.
+	\end{enumerate}
+	
+	\begin{tcolorbox}[colback=yellow!5!white, colframe=yellow!50!black]
+		\textbf{Conclusione}: Il nostro obiettivo sarebbe ottenere $f(p_0)$, ma ciò che il computer ci restituisce effettivamente è $\tilde{f}_a(p_1)$.
+	\end{tcolorbox}
+	\paragraph{Esempio: Calcolo di $e^{\pi}$}
+	
+	Vogliamo calcolare il valore della funzione $f(x) = e^x$ nel punto $p_0 = \pi$.
+	
+	\begin{enumerate}
+		\item \textbf{Approssimazione matematica}: Poiché il calcolatore non può calcolare la funzione esponenziale esatta, usiamo uno sviluppo di Taylor troncato al secondo ordine:
+		\[ f(x) \approx 1 + x + \frac{x^2}{2} =: \tilde{f}(x) \]
+		
+		\item \textbf{Arrotondamento dell'input}: Il numero $\pi$ ha infinite cifre. Lo arrotondiamo a un numero di macchina $p_1$ (nell'esempio con 5 cifre):
+		\[ p_1 = RN(\pi) = 3.1415 \]
+		
+		\item \textbf{Esecuzione dell'algoritmo}: Implementiamo la formula usando solo operazioni di macchina. L'ordine scelto definisce l'algoritmo $\tilde{f}_a(p_1)$:
+		\[ \tilde{f}_a(p_1) = 1 \oplus \left( p_1 \oplus \left( (p_1 \otimes p_1) \oslash 2 \right) \right) \]
+	\end{enumerate}
+	\paragraph{Grafo computazionale:}
+	L'algoritmo sopra descritto può essere visualizzato tramite il seguente schema di flusso:
+	
+	\begin{center}
+		\begin{tikzpicture}[
+			node distance=1.5cm and 2cm,
+			op/.style={circle, draw, minimum size=1cm, inner sep=0pt},
+			thick,
+			>={Stealth[length=2mm]}
+			]
+			% Nodi di input (x)
+			\node[op] (x1) {$x$};
+			\node[op] (x2) [below=0.6cm of x1] {$x$};
+			\node[op] (x3) [below=1.5cm of x2] {$x$};
+			
+			% Nodo x^2
+			\node[op] (sq) [right=of x1, yshift=-0.5cm] {$x^2$};
+			\draw[->] (x1) -- (sq) node[midway, above] {$\otimes$};
+			\draw[->] (x2) -| (sq) node[pos=0.8, right] {$\otimes$};
+			
+			% Nodo x^2/2
+			\node[op] (div) [right=of sq] {$\frac{x^2}{2}$};
+			\draw[->] (sq) -- (div) node[midway, above] {$\oslash$};
+			
+			% Nodo x^2/2 + x
+			\node[op] (add1) [right=of div] {$\frac{x^2}{2} + x$};
+			\draw[->] (div) -- (add1) node[midway, above] {$\oplus$};
+			\draw[->] (x3) -| (add1) node[pos=0.8, right] {$\oplus$};
+			
+			% Nodo finale
+			\node[op] (final) [right=of add1] {\footnotesize $1 + x + \frac{x^2}{2}$};
+			\draw[->] (add1) -- (final) node[midway, above] {$\oplus$};
+			
+		\end{tikzpicture}
+	\end{center}
+	\paragraph{Analisi e Spiegazione del Grafo Computazionale}
+	
+	Il grafo sopra riportato rappresenta la struttura logica e sequenziale dell'algoritmo $\tilde{f}_a(p_1)$. In analisi numerica, questo schema è fondamentale per visualizzare come l'errore si genera e si propaga attraverso i calcoli.
+	
+	\begin{itemize}
+		\item \textbf{Nodi di Input (Sorgenti)}: I cerchi a sinistra contenenti $x$ rappresentano il numero di macchina $p_1 = RN(\pi)$. Nel grafo, lo stesso valore $x$ viene "pescato" tre volte dalla memoria per alimentare i diversi rami del calcolo.
+		
+		\item \textbf{Nodi Operatori (Cerchi con $\otimes, \oslash, \oplus$)}: Ogni cerchio che contiene un simbolo operativo rappresenta un'operazione di macchina. 
+		\begin{itemize}
+			\item Il primo nodo esegue $x \otimes x$, producendo il risultato parziale $x^2$. 
+			\item Il secondo nodo riceve $x^2$ e lo divide per la costante $2$ tramite l'operatore $\oslash$.
+			\item Il terzo e il quarto nodo eseguono le somme ($\oplus$) necessarie per completare il polinomio di Taylor.
+		\end{itemize}
+		
+		\item \textbf{Propagazione dell'Errore locale}: Ogni freccia che entra in un operatore porta con sé un valore potenzialmente già viziato da errori precedenti. Ogni nodo operatore, a sua volta, introduce un nuovo \textbf{errore di arrotondamento locale} dovuto alla funzione $RN(\cdot)$, poiché il risultato di un'operazione tra numeri di macchina non è necessariamente un numero di macchina.
+		
+		\item \textbf{Significato Algoritmico}: Il grafo evidenzia che l'algoritmo non calcola la funzione "tutta insieme", ma come una catena di eventi. L'errore totale $\delta_f$ è dunque la somma accumulata degli errori nati in ogni singolo nodo del grafo, influenzata pesantemente dall'ordine in cui le operazioni sono collegate tra loro.
+	\end{itemize}
+	
+	\begin{tcolorbox}[title=Definizione: Errore Totale]
+		Data $f: \mathbb{R}^m \to \mathbb{R}$, un punto $p_0$ e un algoritmo $\tilde{f}_a$, l'errore totale è dato da:
+		\[ \delta_f = \tilde{f}_a(p_1) - f(p_0) \quad \text{dove } p_1 = RN(p_0) \]
+	\end{tcolorbox}
+	\subsection{Funzioni Razionali}
+	
+	Per semplificare l'analisi, assumiamo che $f$ sia una \textbf{funzione razionale}, ovvero definibile mediante un numero finito di operazioni elementari $\{+, -, \times, /\}$. In questo caso, la funzione approssimata coincide con quella teorica: $\tilde{f}(x) = f(x)$.
+	
+	\paragraph{Errore Assoluto}
+	L'errore assoluto totale $\delta_f$ può essere scomposto come segue:
+	\begin{align*}
+		\delta_f &= f_a(p_1) - f(p_0) \\
+		&= f_a(p_1) - f(p_1) + f(p_1) - f(p_0) \\
+		&= \delta_a + \delta_d
+	\end{align*}
+	dove:
+	\begin{itemize}
+		\item $\delta_a = f_a(p_1) - f(p_1)$ è l'\textbf{errore algoritmico};
+		\item $\delta_d = f(p_1) - f(p_0)$ è l'\textbf{errore inerente}.
+	\end{itemize}
+	
+	\paragraph{Errore Relativo}
+	L'errore relativo $\epsilon_f$ si ottiene dividendo l'errore assoluto per il valore esatto:
+	\begin{align*}
+		\epsilon_f &= \frac{\delta_f}{f(p_0)} = \frac{f_a(p_1) - f(p_0)}{f(p_0)} \\
+		&= \frac{\delta_a}{f(p_0)} + \frac{\delta_d}{f(p_0)} \\
+		&= \frac{f_a(p_1) - f(p_1)}{f(p_1)} \cdot \frac{f(p_1)}{f(p_0)} + \epsilon_d \\
+		&= \epsilon_a \left( 1 + \frac{f(p_1) - f(p_0)}{f(p_0)} \right) + \epsilon_d \\
+		&= \epsilon_a (1 + \epsilon_d) + \epsilon_d
+	\end{align*}
+	Sviluppando il prodotto si ottiene $\epsilon_a + \epsilon_a\epsilon_d + \epsilon_d$. Poiché $\epsilon_a$ ed $\epsilon_d$ sono quantità molto piccole, il loro prodotto $\epsilon_a\epsilon_d$ è trascurabile (ordine superiore). Pertanto:
+	\begin{equation}
+		\epsilon_f \approx \epsilon_a + \epsilon_d
+	\end{equation}
+	
+	In generale, per limitare $|\delta_f|$ si cercano disuguaglianze del tipo:
+	\[ |\delta_a| < \tau_1, \quad |\delta_d| < \tau_2 \implies |\delta_f| < \tau_1 + \tau_2 \]
+	\subsubsection{Problemi ben/mal condizionati (come stimare $\epsilon_d$)}
+	
+	\paragraph{Errore assoluto inerente:}
+	Definiamo l'errore assoluto inerente come:
+	\[ \delta_d := f(p_1) - f(p_0) \]
+	
+	Sotto l'ipotesi che $f \in C^1(D), D \subseteq \mathbb{R}^m$ e $p_0 \in D$, si può sfruttare lo \textbf{sviluppo di Taylor} di $f$ centrato in $p_0$ troncato al primo ordine:
+	
+	
+	\begin{align*}
+		f(p_1) - f(p_0) &= f(p_0) + \nabla f(\widetilde{p})^T (p_1 - p_0) - f(p_0) \quad \text{dove } \widetilde{p} \in \overline{p_1 p_0} \\
+		&= \nabla f(\widetilde{p})^T (p_1 - p_0) = \sum_{j=1}^{m} \frac{\partial f}{\partial x_j}(\widetilde{p}) \cdot (x_j^{(1)} - x_j^{(0)}) \\
+		&\approx \sum_{j=1}^{m} \frac{\partial f}{\partial x_j}(p_0) \cdot (x_j^{(1)} - x_j^{(0)})
+	\end{align*}
+	
+	Definendo $\delta_j = (x_j^{(1)} - x_j^{(0)})$ come l'errore sulla componente $j$-esima di $p_0$, otteniamo la stima:
+	
+	\begin{tcolorbox}[colback=yellow!10!white, colframe=yellow!50!black]
+		\[ \delta_d \approx \sum_{j=1}^{m} \frac{\partial f}{\partial x_j}(p_0) \cdot \delta_j \]
+	\end{tcolorbox}
+	
+	\paragraph{Coefficienti di amplificazione:}
+	Le derivate parziali $\frac{\partial f}{\partial x_j}(p_0)$ agiscono come \textbf{coefficienti di amplificazione} dell'errore. 
+	
+	\begin{itemize}
+		\item Se una derivata è molto grande in modulo, anche un piccolo errore di arrotondamento $\delta_j$ nella componente $j$ dell'input può portare a un errore inerente $\delta_d$ molto grande nel risultato finale.
+		\item In questo caso, diciamo che il problema è \textbf{mal condizionato}.
+	\end{itemize}
+	\paragraph{Errore relativo inerente:}
+	L'errore relativo inerente $\epsilon_d$ è definito come il rapporto tra l'errore assoluto inerente e il valore esatto della funzione nel punto $p_0$:
+	
+	\begin{equation}
+		\epsilon_d := \frac{f(p_1) - f(p_0)}{f(p_0)}
+	\end{equation}
+	
+	Sostituendo la stima del primo ordine ottenuta con Taylor, possiamo riscrivere l'espressione per evidenziare gli errori relativi sulle singole componenti $\epsilon_j$:
+	
+	\begin{align*}
+		\epsilon_d \approx \frac{\sum_{j=1}^{m} \frac{\partial f}{\partial x_j}(p_0) \cdot \delta_j}{f(p_0)} &= \sum_{j=1}^{m} \frac{x_j^{(0)}}{f(p_0)} \frac{\partial f}{\partial x_j}(p_0) \cdot \frac{x_j^{(1)} - x_j^{(0)}}{x_j^{(0)}} \\
+		&= \sum_{j=1}^{m} \underbrace{\left( \frac{x_j^{(0)}}{f(p_0)} \frac{\partial f}{\partial x_j}(p_0) \right)}_{\rho_j} \cdot \epsilon_j
+	\end{align*}
+	
+	dove $\epsilon_j = \frac{x_j^{(1)} - x_j^{(0)}}{x_j^{(0)}}$ rappresenta l'errore relativo sulla componente $j$-esima di $p_0$.
+	
+	\begin{tcolorbox}[colback=yellow!10!white, colframe=yellow!50!black]
+		\[ \epsilon_d \approx \sum_{j=1}^{m} \epsilon_j \rho_j \quad \text{dove } \rho_j := \frac{x_j^{(0)}}{f(p_0)} \frac{\partial f}{\partial x_j}(p_0) \]
+	\end{tcolorbox}
+	
+	I termini $\rho_j$ sono detti \textbf{coefficienti di amplificazione} (o coefficienti di condizionamento relativo).
+	
+	\paragraph{Condizionamento del problema:}
+	In base al modulo dei coefficienti $\rho_j$, possiamo classificare la stabilità del calcolo della funzione rispetto alle perturbazioni dei dati di input:
+	
+	\begin{itemize}
+		\item \textbf{Problema mal condizionato}: Si verifica quando i coefficienti $\rho_j$ sono grandi in modulo (o ne esiste almeno uno molto grande). In questo caso, anche piccoli errori relativi nei dati $\epsilon_j$ vengono fortemente amplificati nel risultato finale.
+		\item \textbf{Problema ben condizionato}: Si verifica quando i coefficienti $\rho_j$ sono "piccoli" (tipicamente vicini a 1). In tale situazione, l'errore relativo finale $\epsilon_d$ risulta dello stesso ordine di grandezza degli errori sui dati $\epsilon_i$.
+	\end{itemize}
+	\subsubsection{Errori inerenti delle operazioni aritmetiche di base}
+	
+	Consideriamo il caso in cui la funzione $f$ rappresenti un'operazione aritmetica elementare tra due variabili ($m=2$), ovvero $f(x, y) = x \text{ op } y$. Nella tabella seguente sono riportati l'errore assoluto inerente $\delta_d$ e l'errore relativo inerente $\epsilon_d$ per le quattro operazioni di macchina.
+	
+	\begin{table}[h!]
+		\centering
+		\renewcommand{\arraystretch}{2} % Migliora la leggibilità delle frazioni
+		\begin{tabular}{l l l}
+			\toprule
+			\textbf{Operatore} & \textbf{Errore inerente} $\delta_d$ & \textbf{Errore inerente relativo} $\epsilon_d$ \\
+			\midrule
+			$x \oplus y$ & $\delta_x + \delta_y$ & $\displaystyle \frac{x}{x+y}\epsilon_x + \frac{y}{x+y}\epsilon_y$ \\
+			
+			$x \ominus y$ & $\delta_x - \delta_y$ & $\displaystyle \frac{x}{x-y}\epsilon_x - \frac{y}{x-y}\epsilon_y$ \\
+			
+			$x \otimes y$ & $y\delta_x + x\delta_y$ & $\epsilon_x + \epsilon_y$ \\
+			
+			$x \oslash y$ & $\displaystyle \frac{1}{y}\delta_x - \frac{x}{y^2}\delta_y$ & $\epsilon_x - \epsilon_y$ \\
+			\bottomrule
+		\end{tabular}
+		\caption{Analisi dell'errore inerente per le operazioni elementari ($m=2$)}
+	\end{table}
+	
+	\paragraph{Osservazioni sul condizionamento:}
+	Dalla tabella si possono trarre conclusioni fondamentali sulla stabilità delle operazioni:
+	\begin{itemize}
+		\item \textbf{Moltiplicazione e Divisione}: Sono operazioni sempre \textbf{ben condizionate}, poiché i coefficienti di amplificazione sono unitari ($\rho_x = 1, \rho_y = \pm 1$). L'errore relativo finale è semplicemente la somma o differenza degli errori relativi iniziali.
+		\item \textbf{Addizione e Sottrazione}: Il condizionamento dipende dai valori di $x$ e $y$. In particolare, nella sottrazione $x \ominus y$, se $x \approx y$, il denominatore $(x-y)$ tende a zero, rendendo i coefficienti $\rho_j$ estremamente grandi. Questo fenomeno è noto come \textbf{cancellazione numerica} ed è una delle principali cause di mal condizionamento nei calcoli.
+	\end{itemize}
+	\subsection{Stimare l'errore algoritmico: }
+	Fissato un algoritmo $f\ped{a}(x)$ possiamo stimare $\delta_a = f(p\ped{1})-f\ped{a}(p\ped{1}), \epsilon_a = \frac{f(p_1)-f_a(p_1)}{f(p_1)}$ (Errore assoluto e relativo algoritmico). Assumiamo che non ci sia errore sui dati iniziali dato che $p_1\in{F(\beta,m,l,U)}$ e studiamo come le operazioni di macchina propagano l'errore di arrotondamento sui risultati intermedi.
+	\paragraph{Esempi pratici: }
+	\[
+		f(x,y,z,w) = x(\frac{y}{z} - w)
+		\; \; \;
+		f_a(x) = x \otimes ((y \oslash z) \ominus w)
+	\]
+	\begin{figure}[h!]
+		\includegraphics[width=\linewidth]{figura1.jpg}
+	\end{figure}
+	\paragraph{Spiegazione}
+	\begin{itemize}
+		\item 
+		Sulla sinistra ci sono i valori iniziali $y^0, z^0, w^0, x^0$. In questa analisi ci si concentra solo sull'errore introdotto dall'algoritmo, quindi assumiamo che i dati in ingresso siano esatti.
+		\item Il calcolatore esegue la prima operazione: $y \oslash z$.
+		\begin{itemize} 
+			\item \textbf{Risultato intermedio ($r1$)}: Rappresenta il valore della divisione memorizzato in memoria
+			\item \textbf{Errore locale ($\varepsilon_1$)}: Poichè il risultato di $y\div{z}$ potrebbe avere infinite cifre, il computer deve arrotondarlo. Questo arrotondamento genera l'errore locale $\varepsilon_1$
+			\item \textbf{Coefficienti sui rami}: Sulle frecce che entrano in $r_1$ i valori $1$ e $-1$ indicano l'errore che si propaga nella divisione.
+		\end{itemize}
+		\item Il valore ottenuto ($r_1$) viene sottratto a $w: (r_1 \ominus w)$.
+		\begin{itemize}
+			\item \textbf{Risultato intermedio ($r_2$)}: Adesso è il risultato della parentesi tonda
+			\item \textbf{Errore locale ($\varepsilon_2$)} Operazione di sottrazione introduce un nuovo errore di arrotondamento proprio, indicato con $\varepsilon_2$
+			\item \textbf{Coefficienti di amplificazione}: Se il denominatore ($y-zw$) è molto piccolo (ovvero se $\frac{y}{z} \approx w$), quesi coefficienti diventano enormi, causando il fenomeno della \textbf{cancellazione numerica} (problema mal condizionato).
+		\end{itemize}
+		\item Infine, il risultato ($r_2$) viene moltiplicato per $x: x \otimes r_2$.
+		\begin{itemize}
+			\item \textbf{Risultato finale ($r_3$)}: Valore definitivo restituito dal calcolatore.
+			\item \textbf{Errore locale ($\varepsilon_3$)} Anche quest'ultima moltiplicazione introduce un piccolo errore di arrotondamento finale.
+			\item \textbf{Propagazione}: La moltiplicazione per sè non amplifica ulteriormente gli errori precedenti in modo drammatico.
+		\end{itemize}
+	\end{itemize}
+	
+	
+	\[
+	\begin{aligned}
+		\epsilon_{r_3} &= \epsilon_3 + 1\epsilon_x + 1\epsilon_{r_2} = \epsilon_3 + \epsilon_{r_2} \\
+		&= \epsilon_3 + \epsilon_2 + \left( \frac{-zw}{y - zw} \right) \epsilon_w + \frac{y}{y - zw} \epsilon_{r_1} = \\
+		&= \epsilon_3 + \epsilon_2 + \frac{y}{y - zw} \epsilon_{r_1} = \epsilon_3 + \epsilon_2 + \frac{y}{y - zw} (\epsilon_1 + 1\epsilon_y - 1\epsilon_z) = \\
+		&= \epsilon_3 + \epsilon_2 + \frac{y}{y - zw} \epsilon_1 = \epsilon_a
+		\; \; \; \; 
+		\text{Sapendo che $\epsilon_w, \epsilon_y, \epsilon_x, \epsilon_z = 0$}
+	\end{aligned}
+	\]
+	
+	% Parte superiore: Stima errori assoluti
+	\noindent
+	Vale che $|\epsilon_1|, |\epsilon_2|, |\epsilon_3| \leq u$. \newline
+	Nel caso di errori assoluti: $|\delta_1|, |\delta_2|, |\delta_3| \le u \cdot \max\{|x|, |y|, |z|\}$
+	
+	\vspace{0.8cm}
+	
+	% Titolo Esempio
+	\noindent
+	{\large \textbf{Esempio} $f(x,y) = x^2 - y^2$}
+	
+	\vspace{0.5cm}
+	
+	% Struttura a due colonne per gli algoritmi
+	\begin{minipage}[t]{0.45\textwidth}
+		\textbf{Algoritmo 1:} \\
+		$r_1 = x \cdot x$ \\
+		$r_2 = y \cdot y$ \\
+		$r_3 = r_1 - r_2$
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.45\textwidth}
+		\textbf{Algoritmo 2:} \\
+		$r_1 = x + y$ \\
+		$r_2 = x - y$ \\
+		$r_3 = r_1 \cdot r_2$
+	\end{minipage}
+	
+	\vspace{2cm} 
+	
+	\begin{figure}[h!]
+		\includegraphics[width=\linewidth]{file2.jpg}
+	\end{figure}
+	
+	\noindent
+	\begin{minipage}[t]{0.48\textwidth}
+		% Analisi Algoritmo 1
+		$$ \epsilon_a = \epsilon_3 + \frac{x^2}{x^2 - y^2} \epsilon_1 - \frac{y^2}{x^2 - y^2} \epsilon_2 $$
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.48\textwidth}
+		% Analisi Algoritmo 2
+		$$ \epsilon_a = \epsilon_1 + \epsilon_2 + \epsilon_3 $$
+	\end{minipage}
+	
+	\vspace{1cm}
+	
+	\noindent
+	\textbf{Nota tecnica:} \\
+	L'\textbf{Algoritmo 1} è numericamente instabile quando $x \approx y$ a causa del fenomeno della \textit{cancellazione numerica} (i coefficienti dell'errore $\epsilon_1$ ed $\epsilon_2$ tendono all'infinito). \\
+	L'\textbf{Algoritmo 2} è invece numericamente stabile poiché l'errore generato $\epsilon_a$ è semplicemente la somma degli errori locali di arrotondamento, indipendentemente dai valori di $x$ e $y$.
+	\subsection{Problema Diretto}
+	Le tecniche viste per stimare $\epsilon_a$ e $\epsilon_d$ le possiamo usare per stimare
+	\begin{align*}
+		|\epsilon_f| &\leq |\epsilon_d| + |\epsilon_a| \\
+		|\delta_f| &\leq |\delta_d| + |\delta_a|
+	\end{align*}
+	\begin{tcolorbox}[colback=yellow!10!white, colframe=yellow!50!black]
+		\textbf{Problema diretto:} Date $f$, una stima degli errori $\delta_{x_i}$ e un algoritmo, vogliamo stimare $\delta_f$ per $p_0 \in D \subseteq \mathbb{R}^m$
+	\end{tcolorbox}
+	
+	\subsubsection*{Esempio} Consideriamo la funzione $f(x_1, x_2) = \frac{x_1}{x_2}$ definita in un dominio $D$ tale che $x_1 \in [1, 3]$ e $x_2 \in [4, 5]$ ($D = [1,3] \times [4,5], p_0 \in D$). Supponiamo che l'errore sui dati sia limitato da $|\delta_{x_i}| < \frac{1}{2} \cdot 10^{-2}$ per $i = 1, 2$.
+	
+	\paragraph{Errore inerente:}
+	Vogliamo determinare una maggiorazione per l'errore inerente $\delta_d$. Calcoliamo le derivate parziali e i loro estremi superiori nel dominio $D$:
+	
+	\begin{itemize}
+		\item Rispetto a $x_1$: 
+		\[ \frac{\partial f}{\partial x_1} = \frac{1}{x_2} \implies A_1 = \sup_{x \in D} \left| \frac{\partial f}{\partial x_1}(x) \right| = \sup_{(x_1,x_2) \in D} \left| \frac{1}{x_2} \right| = \frac{1}{4} \]
+		
+		\item Rispetto a $x_2$: 
+		\[ \frac{\partial f}{\partial x_2} = -\frac{x_1}{x_2^2} \implies A_2 = \sup_{x \in D} \left| \frac{\partial f}{\partial x_2}(x) \right| = \sup_{(x_1,x_2) \in D} \left| -\frac{x_1}{x_2^2} \right| = \frac{3}{16} \]
+	\end{itemize}
+	
+	Dunque, la stima dell'errore totale basata sulla scomposizione $|\delta_f| \leqslant |\delta_a| + |\delta_d|$ diventa:
+	\[ 
+	|\delta_f| \leqslant |\delta_a| + A_1 |\delta_{x_1}| + A_2 |\delta_{x_2}| = |\delta_a| + \frac{1}{4} \cdot \frac{1}{2} \cdot 10^{-2} + \frac{3}{16} \cdot \frac{1}{2} \cdot 10^{-2} 
+	\]
+	
+	\paragraph{Errore algoritmico:}
+	L'errore algoritmico può essere stimato usando la linearizzazione:
+	\[ 
+	\delta_a = \sum_{j=1}^{m} \frac{\partial f}{\partial x_j}(p_0) \cdot \delta_j \implies |\delta_a| \leqslant \sum_{j=1}^{m} \sup_{p \in D} \left| \frac{\partial f}{\partial x_j}(p) \right| \cdot |\delta_j| 
+	\]
+	In questo caso specifico (divisione di macchina), l'errore algoritmico è dato dall'arrotondamento del risultato:
+	\[ 
+	|\delta_a| = \left| \frac{x_1}{x_2} \right| \cdot \frac{1}{2} \cdot 10^{-2} \quad \text{(dato solo dall'errore di troncamento)} 
+	\]
+	
+	\paragraph{Dunque l'errore assoluto:}
+	Combinando i risultati ottenuti:
+	\[ 
+	|\delta_f| \leqslant \left| \frac{x_1}{x_2} \right| \cdot \frac{1}{2} \cdot 10^{-2} + \frac{1}{4} \cdot \frac{1}{2} \cdot 10^{-2} + \frac{3}{16} \cdot \frac{1}{2} \cdot 10^{-2} = \frac{23}{32} \cdot 10^{-2} \leqslant 1
+	\]
+	
+	 \subsection*{Problema Inverso}
+	 
+	 \begin{tcolorbox}[colback=white, colframe=black]
+	 	\textbf{Problema inverso}: dato $\tau > 0$, $f$ e $p_0 \in \mathbb{R}^m$, determinare un algoritmo e un valore di precisione di macchina $u$ tale per cui:
+	 	\[ |\delta_f| < \tau \]
+	 \end{tcolorbox}
+	 
+	 \paragraph{Esempio}
+	 Sia $f(x_1, x_2) = \frac{x_1}{x_2}$ con dominio $D = [1, 2] \times [-2, -1]$. 
+	 Si vuole trovare un algoritmo e una precisione $u$ per cui $|\delta_f| < 10^{-2}$.
+	 
+	 \medskip
+	 \noindent
+	 Scegliamo $x_1 \oslash x_2$ come algoritmo e stimiamo gli errori sui dati $|\delta_{x_1}|, |\delta_{x_2}|$:
+	 \[ |\delta_{x_i}| \leqslant u \cdot |x_i| \leqslant 2u, \quad i = 1, 2 \]
+	 
+	 \noindent
+	 Calcoliamo i coefficienti di amplificazione (derivate parziali):
+	 \begin{itemize}
+	 	\item $A_1 = \sup_{D} \left| \frac{\partial f}{\partial x_1} \right| = \sup_{D} \left| \frac{1}{x_2} \right| = 1$
+	 	\item $A_2 = \sup_{D} \left| \frac{\partial f}{\partial x_2} \right| = \sup_{D} \left| -\frac{x_1}{x_2^2} \right| = 2$
+	 \end{itemize}
+	 
+	 \paragraph{Stima dell'errore totale:}
+	 Utilizzando la scomposizione dell'errore e le maggiorazioni trovate:
+	 
+	 \[
+	 \begin{aligned}
+	 	|\delta_f| &\leqslant |\delta_a| + \underbrace{2u}_{|\delta_{x_1}| \cdot A_1} + \underbrace{2u}_{|\delta_{x_2}| \cdot A_2} \\
+	 	&\leqslant \max_{D} \left| \frac{x_1}{x_2} \right| \cdot u + 4u = 2u + 4u = 6u
+	 \end{aligned}
+	 \]
+	 
+	 \paragraph{Determinazione di $u$:}
+	 Per soddisfare la richiesta del problema:
+	 \[ |\delta_f| \leqslant 6u \leqslant 10^{-2} \implies u = \frac{1}{6} \cdot 10^{-2} \]
+	 
+	 \subsection{Funzioni Non Razionali}
+	 
+	 Se si deve valutare un'espressione matematica \textbf{non razionale} (ad esempio $f(x,y) = e^{\cos(x+y)}$), il calcolatore non può calcolarla esattamente. Si procede quindi scegliendo un'approssimazione razionale $\tilde{f}(x) \approx f(x)$ (ad esempio tramite uno sviluppo di Taylor) e si valuta $\tilde{f}(p_0)$.
+	 
+	 A causa dell'uso dell'aritmetica floating point e dell'approssimazione della funzione, quello che si ottiene effettivamente è $\tilde{f}_a(p_1)$. Si osserva che l'errore totale può essere scomposto come:
+	 
+	 \[
+	 f(p_0) - \tilde{f}_a(p_1) = \underbrace{f(p_0) - f(p_1)}_{\delta_d} + \underbrace{f(p_1) - \tilde{f}(p_1)}_{\delta_{an}} + \underbrace{\tilde{f}(p_1) - \tilde{f}_a(p_1)}_{\delta_a}
+	 \]
+	 
+	 Dove i contributi sono:
+	 \begin{itemize}
+	 	\item $\delta_d$: \textbf{Errore inerente} sulla funzione originale $f$;
+	 	\item $\delta_{an}$: \textbf{Errore analitico} (dovuto all'approssimazione di $f$ con $\tilde{f}$);
+	 	\item $\delta_a$: \textbf{Errore algoritmico} sulla funzione approssimata $\tilde{f}$.
+	 \end{itemize}
+	 
+	 \begin{tcolorbox}[colback=red!5!white]
+	 	\[ \delta_f = \delta_d + \delta_a + \delta_{an} \]
+	 \end{tcolorbox}
+	 
+	 \paragraph{Osservazione:} 
+	 L'errore inerente è calcolato sulla funzione originale ($f$), mentre l'errore algoritmico è calcolato sulla funzione approssimata $\tilde{f}$ (di conseguenza, per stimare $\delta_a$ serve un'analisi del grafo computazionale dell'algoritmo che valuta effettivamente $\tilde{f}$).
+	 
+	 Con tecniche simili a quanto visto nel caso razionale, si dimostra che (a meno di termini trascurabili di ordine superiore) per l'\textbf{errore relativo} vale:
+	 
+	 \begin{equation}
+	 	\epsilon_f := \frac{f(p_0) - \tilde{f}_a(p_1)}{f(p_0)} \qquad \epsilon_f \approx \epsilon_d + \epsilon_a + \epsilon_{an}
+	 \end{equation}
+	 
+	 dove l'errore relativo analitico è definito come:
+	 \begin{equation}
+	 	\epsilon_{an} := \frac{f(p_1) - \tilde{f}(p_1)}{f(p_1)}
+	 \end{equation}
+	 
+	 \paragraph{Stima dell'errore analitico}
+	 Le quantità $\delta_{an}$ ed $\epsilon_{an}$ si stimano utilizzando i risultati della \textbf{teoria dell'approssimazione}. L'esempio più comune (e l'unico che verrà trattato nel corso) è l'approssimazione di una funzione mediante il \textbf{polinomio di Taylor}, per funzioni del tipo $f: \mathbb{R} \to \mathbb{R}$.
+	
+	\paragraph{Reminder:} 
+	Data una funzione $f: \mathbb{R} \to \mathbb{R}$, con $f \in C^{n+1}(\mathbb{R})$ e un punto di centro $x_0 \in \mathbb{R}$, allora:
+	
+	\begin{equation}
+		f(x) = \underbrace{\sum_{j=0}^{n} \frac{f^{(j)}(x_0)}{j!} \cdot (x-x_0)^j}_{\text{Polinomio di grado } n} + \underbrace{\frac{f^{(n+1)}(\eta)}{(n+1)!} (x-x_0)^{n+1}}_{\text{Resto di Lagrange}}
+	\end{equation}
+	
+	Dove:
+	\begin{itemize}
+		\item La parte polinomiale sarà la nostra \textbf{funzione razionale} $\tilde{f}(x)$ che usiamo per approssimare $f(x)$.
+		\item Il \textbf{Resto di Lagrange} è il termine che serve per stimare l'errore analitico.
+		\item $\eta$ è un valore incognito compreso nell'intervallo tra $x$ e $x_0$ (ovvero $\eta \in [x, x_0]$ oppure $\eta \in [x_0, x]$).
+	\end{itemize}
+	
+	\paragraph{Osservazione:}
+	In questo contesto, l'errore analitico assoluto e relativo si identificano direttamente con il resto della serie di Taylor:
+	
+	\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black]
+		\begin{align}
+			\delta_{an}(x) &= \frac{f^{(n+1)}(\eta)}{(n+1)!} (x-x_0)^{n+1} \\
+			\epsilon_{an}(x) &= \frac{f^{(n+1)}(\eta)}{(n+1)!} \frac{(x-x_0)^{n+1}}{f(x)}
+		\end{align}
+	\end{tcolorbox}
+	\paragraph{Esempio: Approssimazione della Funzione Esponenziale}
+	
+	Consideriamo l'approssimazione della funzione $f(x) = e^x$ mediante il suo polinomio di Taylor di grado $n=2$ centrato in $x_0=0$:
+	\[ \tilde{f}(x) = 1 + x + \frac{x^2}{2} \]
+	
+	Vogliamo stimare quanto sia grande l'errore relativo analitico $|\epsilon_{an}|$ e trovare una sua maggiorazione per $x \in [-1, 1]$.
+	
+	\paragraph{Calcolo dell'errore analitico assoluto:}
+	Utilizzando il resto di Lagrange con $n=2$ (dove la derivata terza di $e^x$ è ancora $e^x$):
+	\[ \delta_{an}(x) = e^x - \left( 1 + x + \frac{x^2}{2} \right) = \frac{f^{(3)}(\eta)}{3!} x^3 = \frac{e^\eta x^3}{6} \]
+	con $\eta$ compreso tra $0$ e $x$.
+	
+	\paragraph{Calcolo dell'errore analitico relativo:}
+	Dividendo per il valore esatto della funzione $f(x) = e^x$:
+	\[ \epsilon_{an}(x) = \frac{\delta_{an}(x)}{f(x)} = \frac{e^\eta x^3}{6 e^x} \]
+	
+	\paragraph{Maggiorazione dell'errore nell'intervallo $[-1, 1]$:}
+	Per trovare un limite superiore, cerchiamo i valori massimi dei componenti per $x, \eta \in [-1, 1]$:
+	\[ 
+	\max_{x \in [-1, 1]} |\epsilon_{an}(x)| \leqslant \max_{\eta \in [-1, 1]} e^\eta \cdot \max_{x \in [-1, 1]} \left| \frac{x^3}{6 e^x} \right| \leqslant \frac{e}{6} \cdot \frac{\max_{x \in [-1, 1]} |x^3|}{\min_{x \in [-1, 1]} e^x} 
+	\]
+	
+	Sostituendo i valori estremi nel dominio:
+	\[ 
+	|\epsilon_{an}(x)| \leqslant \frac{e}{6} \cdot \frac{1}{e^{-1}} = \frac{e^2}{6} \approx 1.23 
+	\]
+	
+	\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black]
+		\textbf{Conclusione:} L'errore ottenuto ($\approx 123\%$) non è molto accurato. Questo indica che un polinomio di secondo grado non è sufficiente per approssimare bene l'esponenziale su un intervallo ampio come $[-1, 1]$.
+	\end{tcolorbox}
+	
+	\paragraph{Generalizzazione al Grado $n$}
+	
+	Se considerassimo il polinomio di Taylor di grado $n$, otterremmo un errore assoluto analitico espresso come:
+	\begin{equation}
+		\delta_{an}(x) = \frac{e^{\eta} x^{n+1}}{(n+1)!}
+	\end{equation}
+	
+	Ragionando come nel caso precedente per la maggiorazione dell'errore relativo nell'intervallo $x \in [-1, 1]$, si ottiene:
+	\begin{equation}
+		|\epsilon_{an}(x)| \leqslant \frac{e^2}{(n+1)!} \xrightarrow[n \to +\infty]{} 0
+	\end{equation}
+	
+	Questo limite ci conferma che all'aumentare del grado del polinomio, l'approssimazione diventa sempre più precisa, tendendo a zero.
+	
+	\paragraph{Esempio con $n=4$}
+	Considerando il polinomio di quarto grado:
+	\[ \tilde{f}(x) = 1 + x + \frac{x^2}{2} + \frac{x^3}{6} + \frac{x^4}{24} \]
+	
+	Per $x \in [-1, 1]$, si ottiene una stima dell'errore molto più contenuta:
+	\begin{equation}
+		|\epsilon_{an}(x)| \leqslant \frac{e^2}{5!} = \frac{e^2}{120} \approx 0,061
+	\end{equation}
+	
+	\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black]
+		\textbf{Conclusione finale}: Passando dal grado $n=2$ al grado $n=4$, l'errore relativo è sceso da circa $1,23$ ($123\%$) a $0,061$ ($6,1\%$). Questo rende l'approssimazione decisamente più accettabile per fini computazionali.
+	\end{tcolorbox}
+\end{document}
