@@ -1,0 +1,9 @@
+# Ignora tutti i file...
+*
+# ...ma non ignorare le cartelle (serve a Git per scansionare le sottocartelle)
+!*/
+# ...e non ignorare i file PDF
+!*.pdf
+# (Opzionale) È buona pratica mantenere il .gitignore stesso e il README
+!.gitignore
+!README.md
