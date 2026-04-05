@@ -1,20 +1,19 @@
 #!/bin/bash
 echo "--- Sincronizzazione Repo COMPLETA ---"
 
-# 1. Torna al branch principale (se non ci sei già)
+# 1. Assicuriamoci di essere su main
 git checkout main 2>/dev/null || git checkout -b main
 
-# 2. Configura il .gitignore
+# 2. Usiamo il gitignore completo
 cp .gitignore_full .gitignore
 
-# 3. Reset cache e add
-git rm -r --cached . > /dev/null
-git add -A
+# 3. Aggiungiamo tutto (Git aggiungerà tutto ciò che non è ignorato in .gitignore_full)
+git add .
 
-# 4. Commit e Push forzato al main
-echo "Inserisci il messaggio del commit:"
+# 4. Commit e Push
+echo "Messaggio per il commit completo:"
 read msg
 git commit -m "$msg"
-git push completo main --force
+git push completo main
 
-echo "--- Fatto! Ora controlla Ingegneria-Appunti-Latex ---"
+echo "--- Fatto! Tutto online su Ingegneria-Appunti-Latex ---"
