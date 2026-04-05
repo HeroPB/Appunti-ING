@@ -1,0 +1,4 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {section}{\numberline {1}Assembler}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}MOV}{2}{subsection.1.1}%

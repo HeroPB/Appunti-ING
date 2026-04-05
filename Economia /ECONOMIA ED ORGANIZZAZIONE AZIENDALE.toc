@@ -1,0 +1,117 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {section}{\numberline {1}Introduzione}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Cos'è l'economia?}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Limiti del modello tradizionale}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}L'importanza delle intenzioni}{4}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}L'approccio utilitarista e i suoi limiti}{5}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Economia come sistema complesso}{5}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Il sistema complicato}{5}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Il sistema complesso}{6}{subsubsection.1.5.2}%
+\contentsline {paragraph}{Esempio: Il valore sistemico di un Datacenter}{6}{section*.2}%
+\contentsline {subsection}{\numberline {1.6}Cos'è un'impresa?}{6}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}Il finanziamento e le fonti di capitale}{7}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Remunerazione del capitale}{7}{subsubsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.7}Il ciclo della gestione e la creazione di valore}{7}{subsection.1.7}%
+\contentsline {subsubsection}{\numberline {1.7.1}La gestione come sistema dinamico}{8}{subsubsection.1.7.1}%
+\contentsline {subsubsection}{\numberline {1.7.2}Il tempo e il bilancio}{8}{subsubsection.1.7.2}%
+\contentsline {subsection}{\numberline {1.8}Il ruolo del Management: Arte e Scienza}{8}{subsection.1.8}%
+\contentsline {subsubsection}{\numberline {1.8.1}Efficienza vs Efficacia}{9}{subsubsection.1.8.1}%
+\contentsline {subsubsection}{\numberline {1.8.2}I quattro pilastri del lavoro manageriale}{9}{subsubsection.1.8.2}%
+\contentsline {subsection}{\numberline {1.9}Stakeholder e Shareholder}{10}{subsection.1.9}%
+\contentsline {subsection}{\numberline {1.10}Imprenditore vs. Manager}{10}{subsection.1.10}%
+\contentsline {subsubsection}{\numberline {1.10.1}L'aspetto psicologico e temporale}{10}{subsubsection.1.10.1}%
+\contentsline {section}{\numberline {2}Il caso Olivetti}{11}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Caso di Studio: Il Gruppo Olivetti}{11}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Dalla meccanica all'elettronica}{11}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}La crisi e il "Gruppo di Intervento"}{11}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Visione vs. Risultato immediato}{12}{subsubsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.2}Il conflitto nel Board (1964): Lo scontro dei Trade-off}{12}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Le due posizioni a confronto}{12}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Analisi del trade-off}{13}{subsubsection.2.2.2}%
+\contentsline {paragraph}{Trade-off}{13}{section*.3}%
+\contentsline {paragraph}{Costo-opportunità}{13}{section*.4}%
+\contentsline {section}{\numberline {3}Caso Ferrari}{14}{section.3}%
+\contentsline {section}{\numberline {4}Elementi di disturbo del trade-off}{16}{section.4}%
+\contentsline {section}{\numberline {5}Caso Nokia}{16}{section.5}%
+\contentsline {paragraph}{1) Trade-off affrontati da Nokia (2007–2011)}{17}{section*.6}%
+\contentsline {paragraph}{2) Costo-opportunità della mancata adozione di Android}{18}{section*.7}%
+\contentsline {paragraph}{3) Costo-opportunità degli investimenti in Symbian}{18}{section*.8}%
+\contentsline {subsection}{\numberline {5.1}Bias cognitivi}{18}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Razionalità limitata (Herbert Simon)}{19}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Opportunity cost neglect (Frederick et al., 2009)}{19}{subsubsection.5.1.2}%
+\contentsline {paragraph}{Esperimento del DVD Sony}{20}{section*.9}%
+\contentsline {subsubsection}{\numberline {5.1.3}Contabilità mentale (Richard Thaler, 1985)}{20}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}Avversione alle perdite e teoria del prospetto}{20}{subsubsection.5.1.4}%
+\contentsline {subsubsection}{\numberline {5.1.5}Framing effect}{21}{subsubsection.5.1.5}%
+\contentsline {paragraph}{Esempio gestionale}{21}{section*.10}%
+\contentsline {subsubsection}{\numberline {5.1.6}Troppe alternative e paralisi decisionale}{21}{subsubsection.5.1.6}%
+\contentsline {section}{\numberline {6}Le forme giuridiche delle imprese}{22}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Introduzione: la scelta strategica della forma giuridica}{22}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Il caso CodiceSemplice: da freelance a imprenditore}{22}{subsubsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.2}Concetti fondamentali}{22}{subsection.6.2}%
+\contentsline {paragraph}{Impresa}{22}{section*.11}%
+\contentsline {paragraph}{Ditta}{23}{section*.12}%
+\contentsline {paragraph}{Società}{23}{section*.13}%
+\contentsline {paragraph}{Distinzione chiave}{23}{section*.14}%
+\contentsline {subsection}{\numberline {6.3}L'impresa individuale}{23}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Caratteristiche}{23}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Il grande rischio: responsabilità illimitata}{23}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}I sei limiti alla crescita}{23}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}Società di persone}{24}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Caratteristiche comuni}{24}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Società in Nome Collettivo (SNC)}{24}{subsubsection.6.4.2}%
+\contentsline {paragraph}{Responsabilità solidale}{24}{section*.15}%
+\contentsline {subsubsection}{\numberline {6.4.3}Società in Accomandita Semplice (SAS)}{24}{subsubsection.6.4.3}%
+\contentsline {subsection}{\numberline {6.5}Società di capitali}{25}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}Caratteristiche comuni}{25}{subsubsection.6.5.1}%
+\contentsline {subsubsection}{\numberline {6.5.2}Società a Responsabilità Limitata (SRL)}{25}{subsubsection.6.5.2}%
+\contentsline {subsubsection}{\numberline {6.5.3}Società per Azioni (SPA)}{26}{subsubsection.6.5.3}%
+\contentsline {subsubsection}{\numberline {6.5.4}Società in Accomandita per Azioni (SAPA)}{26}{subsubsection.6.5.4}%
+\contentsline {subsection}{\numberline {6.6}Startup innovative}{26}{subsection.6.6}%
+\contentsline {subsubsection}{\numberline {6.6.1}Requisiti principali}{27}{subsubsection.6.6.1}%
+\contentsline {subsubsection}{\numberline {6.6.2}Vantaggi concreti}{27}{subsubsection.6.6.2}%
+\contentsline {subsubsection}{\numberline {6.6.3}Esempi di startup innovative italiane di successo}{28}{subsubsection.6.6.3}%
+\contentsline {subsection}{\numberline {6.7}Operazioni di Natura Straordinaria}{28}{subsection.6.7}%
+\contentsline {subsubsection}{\numberline {6.7.1}Matrice delle Cessazioni}{28}{subsubsection.6.7.1}%
+\contentsline {paragraph}{Casistiche della matrice:}{28}{section*.16}%
+\contentsline {subsubsection}{\numberline {6.7.2}Trasformazione, Cessione e Fusione}{29}{subsubsection.6.7.2}%
+\contentsline {subsubsection}{\numberline {6.7.3}Scorporazione e Scissione (Spin-off, Split-off, Split-up)}{29}{subsubsection.6.7.3}%
+\contentsline {subsection}{\numberline {6.8}Venture Capital e round di finanziamento}{30}{subsection.6.8}%
+\contentsline {subsubsection}{\numberline {6.8.1}Il meccanismo}{30}{subsubsection.6.8.1}%
+\contentsline {subsubsection}{\numberline {6.8.2}Il VC nel Consiglio di Amministrazione}{30}{subsubsection.6.8.2}%
+\contentsline {subsubsection}{\numberline {6.8.3}Round di finanziamento}{30}{subsubsection.6.8.3}%
+\contentsline {paragraph}{MVP -- Minimum Viable Product}{31}{section*.17}%
+\contentsline {subsection}{\numberline {6.9}Oltre il profitto: imprese ibride e sostenibili}{31}{subsection.6.9}%
+\contentsline {subsubsection}{\numberline {6.9.1}Impresa Forprofit}{31}{subsubsection.6.9.1}%
+\contentsline {subsubsection}{\numberline {6.9.2}Società Benefit}{31}{subsubsection.6.9.2}%
+\contentsline {subsubsection}{\numberline {6.9.3}B-Corp (B-Corporation)}{31}{subsubsection.6.9.3}%
+\contentsline {paragraph}{Differenza chiave}{32}{section*.18}%
+\contentsline {subsubsection}{\numberline {6.9.4}Social Business}{32}{subsubsection.6.9.4}%
+\contentsline {subsubsection}{\numberline {6.9.5}Not For Profit}{32}{subsubsection.6.9.5}%
+\contentsline {subsubsection}{\numberline {6.9.6}Impresa Sociale}{32}{subsubsection.6.9.6}%
+\contentsline {subsubsection}{\numberline {6.9.7}Esempi italiani di successo}{32}{subsubsection.6.9.7}%
+\contentsline {subsection}{\numberline {6.10}Confronto tra le principali forme giuridiche}{33}{subsection.6.10}%
+\contentsline {subsection}{\numberline {6.11}Il ciclo di vita di una startup e le scelte legali}{33}{subsection.6.11}%
+\contentsline {subsection}{\numberline {6.12}Sintesi: cosa portare a casa}{33}{subsection.6.12}%
+\contentsline {subsection}{\numberline {6.13}Le imprese sono Responsabili?}{34}{subsection.6.13}%
+\contentsline {subsection}{\numberline {6.14}Caso Satispay S.p.A.}{34}{subsection.6.14}%
+\contentsline {subsection}{\numberline {6.15}Caso Exein S.r.l.}{34}{subsection.6.15}%
+\contentsline {subsection}{\numberline {6.16}Caso Davines Group}{34}{subsection.6.16}%
+\contentsline {subsection}{\numberline {6.17}Il Finanziamento della Crescita: Equity vs Debito}{35}{subsection.6.17}%
+\contentsline {subsection}{\numberline {6.18}Gli Strumenti Finanziari: Azioni e Obbligazioni}{35}{subsection.6.18}%
+\contentsline {subsubsection}{\numberline {6.18.1}Le Azioni}{35}{subsubsection.6.18.1}%
+\contentsline {subsubsection}{\numberline {6.18.2}Le Obbligazioni (Bond)}{36}{subsubsection.6.18.2}%
+\contentsline {subsection}{\numberline {6.19}Il Caso Parmalat (2003): Il più grande crac finanziario europeo}{36}{subsection.6.19}%
+\contentsline {subsubsection}{\numberline {6.19.1}La dinamica del fallimento}{36}{subsubsection.6.19.1}%
+\contentsline {subsubsection}{\numberline {6.19.2}Cosa ci insegna?}{37}{subsubsection.6.19.2}%
+\contentsline {section}{\numberline {7}Fonti di finanziamento per le startup}{37}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Business Angels}{37}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Venture Capital}{37}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Corporate Capital}{37}{subsection.7.3}%
+\contentsline {section}{\numberline {8}CyberPeak}{38}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Prima Fase}{38}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Seconda Fase}{38}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Terza Fase}{38}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Fondamenti del Bilancio}{42}{section.9}%
+\contentsline {subsection}{\numberline {9.1}De Cecco}{42}{subsection.9.1}%
